@@ -30,7 +30,7 @@ class AVFFileReader: FileReaderProtocol {
     
     private func cleanUpString(_ string: String?) -> String? {
         
-        if let theTrimmedString = string?.trim().removingNewlines() {
+        if let theTrimmedString = string?.trim() {
             return theTrimmedString.isEmpty ? nil : theTrimmedString
         }
         

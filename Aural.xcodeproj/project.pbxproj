@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		033EA0D52CFDA9E40017F86C /* LyricsXCore in Frameworks */ = {isa = PBXBuildFile; productRef = 033EA0D42CFDA9E40017F86C /* LyricsXCore */; };
+		033EA0F82CFDAE5E0017F86C /* LyricsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */; };
 		3E0217D62C23490E00865AC2 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B62C23490E00865AC2 /* FileWatcher.swift */; };
 		3E0217D72C23490E00865AC2 /* FileWatcher+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B72C23490E00865AC2 /* FileWatcher+Action.swift */; };
 		3E0217D82C23490E00865AC2 /* FileWatcherEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B82C23490E00865AC2 /* FileWatcherEvent.swift */; };
@@ -1027,6 +1029,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsScrollView.swift; sourceTree = "<group>"; };
 		3E0215B62C23490E00865AC2 /* FileWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		3E0215B72C23490E00865AC2 /* FileWatcher+Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileWatcher+Action.swift"; sourceTree = "<group>"; };
 		3E0215B82C23490E00865AC2 /* FileWatcherEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWatcherEvent.swift; sourceTree = "<group>"; };
@@ -2157,6 +2160,7 @@
 				3E74578A2C6A78A90086C888 /* libcue.xcframework in Frameworks */,
 				3EF30D0D28DC6FE900CB09EA /* DequeModule in Frameworks */,
 				3E86B5102C234B440097746A /* libswresample.xcframework in Frameworks */,
+				033EA0D52CFDA9E40017F86C /* LyricsXCore in Frameworks */,
 				3EE882842C72A18300E270B8 /* libebur128.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3633,6 +3637,7 @@
 			children = (
 				3E36BD3026A68E9800B6E28B /* LyricsTrackInfo.xib */,
 				3E36BD3326A68EAA00B6E28B /* LyricsTrackInfoViewController.swift */,
+				033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */,
 			);
 			path = Lyrics;
 			sourceTree = "<group>";
@@ -5532,6 +5537,7 @@
 				3EF30D0A28DC6FE900CB09EA /* Collections */,
 				3EF30D0C28DC6FE900CB09EA /* DequeModule */,
 				3EF30D0E28DC6FE900CB09EA /* OrderedCollections */,
+				033EA0D42CFDA9E40017F86C /* LyricsXCore */,
 			);
 			productName = Aural;
 			productReference = 3E6C0EBF25CEB3ED00BF0D07 /* Aural.app */;
@@ -5564,6 +5570,7 @@
 			mainGroup = 3E6C0EB625CEB3ED00BF0D07;
 			packageReferences = (
 				3EF30D0928DC6FE900CB09EA /* XCRemoteSwiftPackageReference "swift-collections" */,
+				033EA0D32CFDA9E40017F86C /* XCRemoteSwiftPackageReference "LyricsXCore" */,
 			);
 			productRefGroup = 3E6C0EC025CEB3ED00BF0D07 /* Products */;
 			projectDirPath = "";
@@ -5865,6 +5872,7 @@
 				3EF020492C597E88005A841B /* AVChannelLayout+Extensions.swift in Sources */,
 				3E5864A02B76DD0000BDB5A6 /* PlayerViewController.swift in Sources */,
 				3E0218062C23490E00865AC2 /* ReverbUnit.swift in Sources */,
+				033EA0F82CFDAE5E0017F86C /* LyricsScrollView.swift in Sources */,
 				3E0218C72C23490E00865AC2 /* PlaybackInfoDelegateProtocol.swift in Sources */,
 				3E0219692C23490E00865AC2 /* Images.swift in Sources */,
 				3E2C4BD92B38E5F800FC65DD /* SearchWindowController.swift in Sources */,
@@ -6810,6 +6818,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		033EA0D32CFDA9E40017F86C /* XCRemoteSwiftPackageReference "LyricsXCore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tisfeng/LyricsXCore.git";
+			requirement = {
+				branch = dev;
+				kind = branch;
+			};
+		};
 		3EF30D0928DC6FE900CB09EA /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -6821,6 +6837,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		033EA0D42CFDA9E40017F86C /* LyricsXCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 033EA0D32CFDA9E40017F86C /* XCRemoteSwiftPackageReference "LyricsXCore" */;
+			productName = LyricsXCore;
+		};
 		3EF30D0A28DC6FE900CB09EA /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3EF30D0928DC6FE900CB09EA /* XCRemoteSwiftPackageReference "swift-collections" */;
