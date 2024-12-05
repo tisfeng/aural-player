@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		033EA0D52CFDA9E40017F86C /* LyricsXCore in Frameworks */ = {isa = PBXBuildFile; productRef = 033EA0D42CFDA9E40017F86C /* LyricsXCore */; };
 		033EA0F82CFDAE5E0017F86C /* LyricsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */; };
+		033EA1822CFF0AA30017F86C /* LyricsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */; };
 		3E0217D62C23490E00865AC2 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B62C23490E00865AC2 /* FileWatcher.swift */; };
 		3E0217D72C23490E00865AC2 /* FileWatcher+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B72C23490E00865AC2 /* FileWatcher+Action.swift */; };
 		3E0217D82C23490E00865AC2 /* FileWatcherEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B82C23490E00865AC2 /* FileWatcherEvent.swift */; };
@@ -1030,6 +1031,7 @@
 
 /* Begin PBXFileReference section */
 		033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsScrollView.swift; sourceTree = "<group>"; };
+		033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsWindowController.swift; sourceTree = "<group>"; };
 		3E0215B62C23490E00865AC2 /* FileWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
 		3E0215B72C23490E00865AC2 /* FileWatcher+Action.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "FileWatcher+Action.swift"; sourceTree = "<group>"; };
 		3E0215B82C23490E00865AC2 /* FileWatcherEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWatcherEvent.swift; sourceTree = "<group>"; };
@@ -3638,6 +3640,7 @@
 				3E36BD3026A68E9800B6E28B /* LyricsTrackInfo.xib */,
 				3E36BD3326A68EAA00B6E28B /* LyricsTrackInfoViewController.swift */,
 				033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */,
+				033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */,
 			);
 			path = Lyrics;
 			sourceTree = "<group>";
@@ -6066,6 +6069,7 @@
 				3E0218DB2C23490E00865AC2 /* Player.swift in Sources */,
 				3E02191C2C23490E00865AC2 /* UserPreference.swift in Sources */,
 				3E2ED4A925DBC50500732E79 /* FontSchemesManager.swift in Sources */,
+				033EA1822CFF0AA30017F86C /* LyricsWindowController.swift in Sources */,
 				3EA3CE6A25E3FDE000BC7D07 /* FontSchemesManagerViewController.swift in Sources */,
 				3EB3A61626A762750060487C /* FontSchemesViewProtocol.swift in Sources */,
 				3E0218ED2C23490E00865AC2 /* GroupsSort.swift in Sources */,

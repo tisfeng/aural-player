@@ -560,7 +560,9 @@ class PlayerViewController: NSViewController {
     
     // Override this in subclasses!
     func showTrackInfoView() {}
-    
+
+    func showLyricsView() {}
+
     func toggleLoop() {
         
         guard playbackDelegate.state.isPlayingOrPaused else {return}

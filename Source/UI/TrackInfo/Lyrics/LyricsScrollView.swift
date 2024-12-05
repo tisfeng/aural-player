@@ -86,15 +86,19 @@ struct LyricsScrollView: View {
                 }
                 .environmentObject(viewStore)
                 .padding(.horizontal)
-                .frame(width: 400)
+                .frame(minWidth: 300, minHeight: 300)
             } else {
-                // Fallback on earlier versions
+               Text("Lyrics view not available on this version of macOS")
+                    .frame(minWidth: 300, minHeight: 300)
             }
+        } else {
+            Text("No lyrics available")
+                .frame(minWidth: 300, minHeight: 300)
         }
     }
 
     /// Play lyrics at position.
-    private func playLyrics(at position: TimeInterval) {
+    public func playLyrics(at position: TimeInterval) {
         if let progressing = viewStore?.progressingState {
             if progressing.lyrics.lineIndex(at: position) != nil {
                 let playbackState = playbackState(at: position)
@@ -105,7 +109,7 @@ struct LyricsScrollView: View {
     }
 
     /// Play back state at position.
-    private func playbackState(at position: TimeInterval) -> MusicPlayer.PlaybackState {
+    public func playbackState(at position: TimeInterval) -> MusicPlayer.PlaybackState {
         isPlaying ? .playing(time: position) : .paused(time: position)
     }
 }
