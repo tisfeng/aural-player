@@ -34,6 +34,7 @@ struct LyricsScrollView: View {
         self.track = track
         self.lyrics = lyrics
         self.elapsedTime = elapsedTime
+        self.isPlaying = isPlaying
         self.onLyricsTap = onLyricsTap
 
         if let track = track, let lyrics = lyrics {
@@ -69,6 +70,8 @@ struct LyricsScrollView: View {
                 environment: .default)
 
             self.viewStore = ViewStore(store)
+
+            seekTo(position: elapsedTime)
         } else {
             self.viewStore = nil
         }
@@ -81,7 +84,7 @@ struct LyricsScrollView: View {
                     isAutoScrollEnabled: $isAutoScrollEnabled,
                     showLockButton: false
                 ) { position in
-                    playLyrics(at: position)
+                    seekTo(position: position)
                     onLyricsTap?(position)
                 }
                 .environmentObject(viewStore)
@@ -98,7 +101,7 @@ struct LyricsScrollView: View {
     }
 
     /// Play lyrics at position.
-    public func playLyrics(at position: TimeInterval) {
+    public func seekTo(position: TimeInterval) {
         if let progressing = viewStore?.progressingState {
             if progressing.lyrics.lineIndex(at: position) != nil {
                 let playbackState = playbackState(at: position)

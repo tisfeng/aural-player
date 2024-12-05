@@ -60,6 +60,12 @@ class LyricsWindowController: NSWindowController {
         updateContent(track: track, lyrics: lyrics)
     }
 
+    override func windowDidLoad() {
+        super.windowDidLoad()
+    }
+
+    // MARK: Update UI ----------------------------------------------------------------------
+
     func update(track: Track? = nil, elapsedTime: Double = 0) {
         let playingTrack = track ?? playbackDelegate.playingTrack
         let lyrics = Lyrics(playingTrack?.lyrics ?? "")
@@ -74,7 +80,9 @@ class LyricsWindowController: NSWindowController {
         )
     }
 
-    func updateContent(track: MusicTrack?, lyrics: Lyrics?, elapsedTime: Double = 0, isPlaying: Bool = true) {
+    func updateContent(
+        track: MusicTrack?, lyrics: Lyrics?, elapsedTime: Double = 0, isPlaying: Bool = true
+    ) {
         self.currentTrack = track
         self.currentLyrics = lyrics
         self.currentElapsedTime = elapsedTime
@@ -83,22 +91,18 @@ class LyricsWindowController: NSWindowController {
         DispatchQueue.main.async { [self] in
             if let window = self.window {
                 let lyricsView = LyricsScrollView(
-                    track: self.currentTrack,
-                    lyrics: self.currentLyrics,
-                    elapsedTime: self.currentElapsedTime,
-                    isPlaying: self.isPlaying
+                    track: track,
+                    lyrics: lyrics,
+                    elapsedTime: elapsedTime,
+                    isPlaying: isPlaying
                 ) { position in
-                    print("LyricsWindowController: Seeking to position \(position)")
+                    print("Seeking to position \(position)")
+                    playbackDelegate.seekToTime(position)
                 }
 
                 window.contentView = NSHostingView(rootView: lyricsView)
-                lyricsView.playLyrics(at: elapsedTime)
             }
         }
-    }
-
-    override func windowDidLoad() {
-        super.windowDidLoad()
     }
 
     // MARK: Notification handling --------------------------------------------------------
@@ -115,8 +119,6 @@ class LyricsWindowController: NSWindowController {
 
     private func trackInfoUpdated(_ notif: TrackInfoUpdatedNotification) {
         print("LyricsWindowController: Track info updated")
-
-        //        update(track: notif.updatedTrack)
     }
 
     private func playbackStateChanged() {
@@ -132,8 +134,8 @@ class LyricsWindowController: NSWindowController {
     }
 }
 
-// convert Track to MusicTrack
 extension Track {
+    /// Convert Track to MusicTrack
     var musicTrack: MusicTrack {
         MusicTrack(id: title ?? "", title: title, album: album, artist: artist, duration: duration)
     }
