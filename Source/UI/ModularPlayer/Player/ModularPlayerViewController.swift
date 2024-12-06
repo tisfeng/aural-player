@@ -127,16 +127,6 @@ class ModularPlayerViewController: PlayerViewController {
         windowLayoutsManager.showWindow(withId: .trackInfo)
     }
 
-    override func showLyricsView() {
-
-        if windowLayoutsManager.isWindowLoaded(withId: .lyrics) {
-            messenger.publish(.Player.trackInfo_refresh)
-        }
-
-        windowLayoutsManager.showWindow(withId: .lyrics)
-    }
-
-
     override func setUpColorSchemePropertyObservation() {
         
         super.setUpColorSchemePropertyObservation()
@@ -157,8 +147,6 @@ class ModularPlayerViewController: PlayerViewController {
             
             btnFunctionsMenu.hide()
             btnFunctionsMenu.menu?.cancelTracking()
-        } else {
-            showLyricsView()
         }
     }
     

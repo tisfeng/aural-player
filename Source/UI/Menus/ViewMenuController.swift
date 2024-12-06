@@ -19,6 +19,9 @@ class ViewMenuController: NSObject, NSMenuDelegate {
     // Menu items whose states are toggled when they (or others) are clicked
     @IBOutlet weak var togglePlayerMenuItem: NSMenuItem!
     @IBOutlet weak var togglePlayQueueMenuItem: NSMenuItem!
+
+    @IBOutlet weak var toggleLyricsMenuItem: NSMenuItem!
+    
     @IBOutlet weak var toggleEffectsMenuItem: NSMenuItem!
     @IBOutlet weak var toggleChaptersListMenuItem: NSMenuItem!
     @IBOutlet weak var toggleTrackInfoMenuItem: NSMenuItem!
@@ -71,6 +74,7 @@ class ViewMenuController: NSObject, NSMenuDelegate {
         togglePlayerMenuItem.showIf(isCompactMode)
         togglePlayerMenuItem.onIf(isCompactMode && compactPlayerUIState.displayedView == .player)
         togglePlayQueueMenuItem.onIf(appModeManager.isShowingPlayQueue)
+        toggleLyricsMenuItem.onIf(appModeManager.isShowingLyrics)
         toggleEffectsMenuItem.onIf(appModeManager.isShowingEffects)
         toggleChaptersListMenuItem.onIf(appModeManager.isShowingChaptersList)
         toggleVisualizerMenuItem.onIf(appModeManager.isShowingVisualizer)
@@ -103,7 +107,12 @@ class ViewMenuController: NSObject, NSMenuDelegate {
     @IBAction func togglePlayQueueAction(_ sender: NSMenuItem) {
         Messenger.publish(.View.togglePlayQueue)
     }
-    
+
+    // Shows/hides the lyrics window
+    @IBAction func toggleLyricsAction(_ sender: NSMenuItem) {
+        Messenger.publish(.View.toggleLyrics)
+    }
+
     // Shows/hides the effects window
     @IBAction func toggleEffectsAction(_ sender: NSMenuItem) {
         Messenger.publish(.View.toggleEffects)

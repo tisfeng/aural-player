@@ -82,7 +82,6 @@ class LyricsWindowController: NSWindowController {
     }
 
     private func setupNotifications() {
-        messenger.subscribe(to: .Player.trackInfo_refresh, handler: trackInfoRefresh)
         messenger.subscribeAsync(to: .Player.trackTransitioned, handler: trackTransitioned)
         messenger.subscribeAsync(to: .Player.trackInfoUpdated, handler: trackInfoUpdated(_:))
         messenger.subscribeAsync(to: .Player.trackNotPlayed, handler: trackTransitioned)
@@ -121,10 +120,6 @@ class LyricsWindowController: NSWindowController {
     }
 
     // MARK: - Notification Handlers
-
-    private func trackInfoRefresh() {
-        print("LyricsWindowController: Track info refresh")
-    }
 
     private func trackTransitioned(_ notif: TrackTransitionNotification) {
         print("LyricsWindowController: Track transitioned")
