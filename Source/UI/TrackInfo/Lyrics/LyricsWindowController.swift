@@ -91,16 +91,11 @@ class LyricsWindowController: NSWindowController {
 
     // MARK: - Update UI
 
-    func updateTrack(
-        _ track: Track? = nil,
-        lyrics: Lyrics? = nil,
-        elapsedTime: Double = 0,
-        isPlaying: Bool = false
-    ) {
+    func updateTrack(_ track: Track? = nil, lyrics: Lyrics? = nil) {
         self.track = track ?? playbackDelegate.playingTrack
         self.lyrics = lyrics ?? Lyrics(self.track?.lyrics ?? "")
-        self.elapsedTime = elapsedTime > 0 ? elapsedTime : playbackDelegate.seekPosition.timeElapsed
-        self.isPlaying = isPlaying
+        self.elapsedTime = playbackDelegate.seekPosition.timeElapsed
+        self.isPlaying = playbackDelegate.state == .playing
 
         if lyricsView == nil {
             setupLyricsView()
