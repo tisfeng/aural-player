@@ -15,11 +15,12 @@ import SwiftUI
 class LyricsWindowController: NSWindowController {
 
     private var hostingView: NSHostingView<LyricsScrollView>?
+    private var lyricsView: LyricsScrollView?
 
     private var currentTrack: MusicTrack?
     private var currentLyrics: Lyrics?
     private var currentElapsedTime: Double = 0
-    private var isPlaying: Bool = true
+    private var isPlaying: Bool = false
 
     lazy var messenger = Messenger(for: self)
 
@@ -35,18 +36,8 @@ class LyricsWindowController: NSWindowController {
 
         super.init(window: window)
 
-        let hostingView = NSHostingView(rootView: LyricsScrollView())
-        window.contentView = hostingView
-        self.hostingView = hostingView
-
-        messenger.subscribe(to: .Player.trackInfo_refresh, handler: trackInfoRefresh)
-
-        messenger.subscribeAsync(to: .Player.trackTransitioned, handler: trackTransitioned)
-        messenger.subscribeAsync(to: .Player.trackInfoUpdated, handler: trackInfoUpdated(_:))
-        messenger.subscribeAsync(to: .Player.trackNotPlayed, handler: trackTransitioned)
-        messenger.subscribeAsync(to: .Player.playbackStateChanged, handler: playbackStateChanged)
-        messenger.subscribeAsync(to: .Player.seekPerformed, handler: seekPerformed)
-        messenger.subscribeAsync(to: .Player.loopRestarted, handler: seekPerformed)
+        setupLyricsView()
+        setupNotifications()
 
         update()
     }
@@ -55,16 +46,50 @@ class LyricsWindowController: NSWindowController {
         super.init(coder: coder)
     }
 
-    convenience init(track: MusicTrack?, lyrics: Lyrics?) {
-        self.init(window: nil)
-        updateContent(track: track, lyrics: lyrics)
-    }
-
     override func windowDidLoad() {
         super.windowDidLoad()
     }
 
-    // MARK: Update UI ----------------------------------------------------------------------
+    convenience init(track: MusicTrack?, lyrics: Lyrics?) {
+        self.init(window: nil)
+        updateLyricsView(track: track, lyrics: lyrics)
+    }
+
+    private func createLyricsView(
+        track: MusicTrack? = nil,
+        lyrics: Lyrics? = nil,
+        elapsedTime: Double = 0,
+        isPlaying: Bool = false
+    ) -> LyricsScrollView {
+        LyricsScrollView(
+            track: track,
+            lyrics: lyrics,
+            elapsedTime: elapsedTime,
+            isPlaying: isPlaying
+        ) { [weak self] position in
+            print("Tap to seek position \(position)")
+            self?.messenger.publish(.Player.jumpToTime, payload: position)
+        }
+    }
+
+    private func setupLyricsView() {
+        let lyricsView = createLyricsView()
+        self.lyricsView = lyricsView
+        let hostingView = NSHostingView(rootView: lyricsView)
+        self.hostingView = hostingView
+        window?.contentView = hostingView
+    }
+
+    private func setupNotifications() {
+        messenger.subscribe(to: .Player.trackInfo_refresh, handler: trackInfoRefresh)
+        messenger.subscribeAsync(to: .Player.trackTransitioned, handler: trackTransitioned)
+        messenger.subscribeAsync(to: .Player.trackInfoUpdated, handler: trackInfoUpdated(_:))
+        messenger.subscribeAsync(to: .Player.trackNotPlayed, handler: trackTransitioned)
+        messenger.subscribeAsync(to: .Player.playbackStateChanged, handler: playbackStateChanged)
+        messenger.subscribeAsync(to: .Player.seekPerformed, handler: seekPerformed)
+    }
+
+    // MARK: - Update UI
 
     func update(track: Track? = nil, elapsedTime: Double = 0) {
         let playingTrack = track ?? playbackDelegate.playingTrack
@@ -72,7 +97,7 @@ class LyricsWindowController: NSWindowController {
 
         let elapsedTime = elapsedTime > 0 ? elapsedTime : playbackDelegate.seekPosition.timeElapsed
 
-        updateContent(
+        updateLyricsView(
             track: playingTrack?.musicTrack,
             lyrics: lyrics,
             elapsedTime: elapsedTime,
@@ -80,32 +105,37 @@ class LyricsWindowController: NSWindowController {
         )
     }
 
-    func updateContent(
-        track: MusicTrack?, lyrics: Lyrics?, elapsedTime: Double = 0, isPlaying: Bool = true
+    func updateLyricsView(
+        track: MusicTrack?,
+        lyrics: Lyrics?,
+        elapsedTime: Double = 0,
+        isPlaying: Bool = false
     ) {
         self.currentTrack = track
         self.currentLyrics = lyrics
         self.currentElapsedTime = elapsedTime
         self.isPlaying = isPlaying
 
-        DispatchQueue.main.async { [self] in
-            if let window = self.window {
-                let lyricsView = LyricsScrollView(
-                    track: track,
-                    lyrics: lyrics,
-                    elapsedTime: elapsedTime,
-                    isPlaying: isPlaying
-                ) { position in
-                    print("Seeking to position \(position)")
-                    playbackDelegate.seekToTime(position)
-                }
+        if lyricsView == nil {
+            setupLyricsView()
+        }
 
-                window.contentView = NSHostingView(rootView: lyricsView)
+        DispatchQueue.main.async { [weak self] in
+            let newLyricsView = self?.createLyricsView(
+                track: track,
+                lyrics: lyrics,
+                elapsedTime: elapsedTime,
+                isPlaying: isPlaying
+            )
+
+            if let newLyricsView {
+                self?.lyricsView = newLyricsView
+                self?.hostingView?.rootView = newLyricsView
             }
         }
     }
 
-    // MARK: Notification handling --------------------------------------------------------
+    // MARK: - Notification Handlers
 
     private func trackInfoRefresh() {
         print("LyricsWindowController: Track info refresh")
@@ -113,7 +143,6 @@ class LyricsWindowController: NSWindowController {
 
     private func trackTransitioned(_ notif: TrackTransitionNotification) {
         print("LyricsWindowController: Track transitioned")
-
         update(track: notif.endTrack)
     }
 
@@ -121,21 +150,19 @@ class LyricsWindowController: NSWindowController {
         print("LyricsWindowController: Track info updated")
     }
 
+    /// Handle play or pause event.
     private func playbackStateChanged() {
         print("LyricsWindowController: Playback state changed")
-
         update()
     }
 
     private func seekPerformed() {
         print("LyricsWindowController: Seek performed")
-
         update()
     }
 }
 
 extension Track {
-    /// Convert Track to MusicTrack
     var musicTrack: MusicTrack {
         MusicTrack(id: title ?? "", title: title, album: album, artist: artist, duration: duration)
     }
