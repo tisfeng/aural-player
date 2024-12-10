@@ -22,6 +22,9 @@ class LyricsWindowController: NSWindowController {
     private var elapsedTime: Double = 0
     private var isPlaying: Bool = false
 
+    // Timer to update elapsed time
+    private var updateTimer: Timer?
+
     lazy var messenger = Messenger(for: self)
 
     override init(window: NSWindow?) {
@@ -87,30 +90,61 @@ class LyricsWindowController: NSWindowController {
         messenger.subscribeAsync(to: .Player.trackNotPlayed, handler: trackTransitioned)
         messenger.subscribeAsync(to: .Player.playbackStateChanged, handler: playbackStateChanged)
         messenger.subscribeAsync(to: .Player.seekPerformed, handler: seekPerformed)
+        
+        // Start update timer
+        startUpdateTimer()
+    }
+
+    // Start timer to update elapsed time
+    private func startUpdateTimer() {
+        stopUpdateTimer()
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            let newElapsedTime = playbackDelegate.seekPosition.timeElapsed
+            if newElapsedTime != self.elapsedTime {
+//                print("LyricsWindowController: Elapsed time updated: \(newElapsedTime)")
+
+                self.elapsedTime = newElapsedTime
+                self.updateTrack()
+            }
+        }
+    }
+    
+    // Stop update timer
+    private func stopUpdateTimer() {
+        updateTimer?.invalidate()
+        updateTimer = nil
+    }
+    
+    deinit {
+        stopUpdateTimer()
     }
 
     // MARK: - Update UI
 
     func updateTrack(_ track: Track? = nil, lyrics: Lyrics? = nil) {
         self.track = track ?? playbackDelegate.playingTrack
-        self.lyrics = lyrics ?? Lyrics(self.track?.lyrics ?? "")
+
+        let lyricsText = self.track?.lyrics ?? ""
+        self.lyrics = lyrics ?? Lyrics(lyricsText)
+
         self.elapsedTime = playbackDelegate.seekPosition.timeElapsed
         self.isPlaying = playbackDelegate.state == .playing
 
-        if lyricsView == nil {
-            setupLyricsView()
-        }
-
         DispatchQueue.main.async { [self] in
-            let newLyricsView = self.createLyricsView(
-                track: self.track?.musicTrack,
-                lyrics: self.lyrics,
-                elapsedTime: self.elapsedTime,
-                isPlaying: self.isPlaying
-            )
+            if lyricsView?.track == nil {
+                let newLyricsView = self.createLyricsView(
+                    track: self.track?.musicTrack,
+                    lyrics: self.lyrics,
+                    elapsedTime: self.elapsedTime,
+                    isPlaying: self.isPlaying
+                )
 
-            self.lyricsView = newLyricsView
-            self.hostingView?.rootView = newLyricsView
+                self.lyricsView = newLyricsView
+                self.hostingView?.rootView = newLyricsView
+            }
+
+            self.lyricsView?.seekTo(position: self.elapsedTime)
         }
     }
 

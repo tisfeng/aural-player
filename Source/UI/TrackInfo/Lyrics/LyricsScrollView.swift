@@ -22,7 +22,7 @@ struct LyricsScrollView: View {
     public let onLyricsTap: ((TimeInterval) -> Void)?
 
     @State private var isAutoScrollEnabled = true
-    private let viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
+    public let viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
 
     init(
         track: MusicTrack? = nil,
