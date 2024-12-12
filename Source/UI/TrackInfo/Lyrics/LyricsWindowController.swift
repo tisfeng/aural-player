@@ -39,10 +39,9 @@ class LyricsWindowController: NSWindowController {
 
         super.init(window: window)
 
-        setupLyricsView()
-        setupNotifications()
+        updateLyricsView()
 
-        updateTrack()
+        setupNotifications()
     }
 
     required init?(coder: NSCoder) {
@@ -53,37 +52,38 @@ class LyricsWindowController: NSWindowController {
         super.windowDidLoad()
     }
 
-    convenience init(track: MusicTrack?, lyrics: Lyrics?) {
+    convenience init(track: Track?, lyrics: Lyrics?) {
         self.init(window: nil)
-        updateTrack()
+
+        self.track = track
+        self.lyrics = lyrics
+        updateLyricsView()
     }
 
-    private func createLyricsView(
-        track: MusicTrack? = nil,
-        lyrics: Lyrics? = nil,
-        elapsedTime: Double = 0,
-        isPlaying: Bool = false
-    ) -> LyricsScrollView {
-        LyricsScrollView(
-            track: track,
+    // MARK: - View Management
+
+    private func updateLyricsView() {
+        let lyricsView = LyricsScrollView(
+            track: track?.musicTrack,
             lyrics: lyrics,
             elapsedTime: elapsedTime,
             isPlaying: isPlaying
         ) { [weak self] index, proxy in
             let position = self?.lyrics?[index].position ?? 0
             self?.messenger.publish(.Player.jumpToTime, payload: position)
+        }
 
-            print("Tap to seek position \(position)")
+        self.lyricsView = lyricsView
+
+        if hostingView == nil {
+            hostingView = NSHostingView(rootView: lyricsView)
+            window?.contentView = hostingView
+        } else {
+            hostingView?.rootView = lyricsView
         }
     }
 
-    private func setupLyricsView() {
-        let lyricsView = createLyricsView()
-        self.lyricsView = lyricsView
-        let hostingView = NSHostingView(rootView: lyricsView)
-        self.hostingView = hostingView
-        window?.contentView = hostingView
-    }
+    // MARK: - Setup
 
     private func setupNotifications() {
         messenger.subscribeAsync(to: .Player.trackTransitioned, handler: trackTransitioned)
@@ -91,87 +91,72 @@ class LyricsWindowController: NSWindowController {
         messenger.subscribeAsync(to: .Player.trackNotPlayed, handler: trackTransitioned)
         messenger.subscribeAsync(to: .Player.playbackStateChanged, handler: playbackStateChanged)
         messenger.subscribeAsync(to: .Player.seekPerformed, handler: seekPerformed)
-        
-        // Start update timer
+
         startUpdateTimer()
     }
 
-    // Start timer to update elapsed time
+    // MARK: - Update Methods
+
+    private func updateTrackInfo() {
+        track = playbackDelegate.playingTrack
+        lyrics = Lyrics(track?.lyrics ?? "")
+        updatePlaybackState()
+
+        DispatchQueue.main.async {
+            self.updateLyricsView()
+        }
+    }
+
+    private func updatePlaybackState() {
+        elapsedTime = playbackDelegate.seekPosition.timeElapsed
+        isPlaying = playbackDelegate.state == .playing
+    }
+
+    private func updateLyricsPosition() {
+        lyricsView?.seekTo(position: elapsedTime, isPlaying: isPlaying)
+    }
+
+    // MARK: - Timer Management
+
     private func startUpdateTimer() {
         stopUpdateTimer()
         updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            let newElapsedTime = playbackDelegate.seekPosition.timeElapsed
-            if newElapsedTime != self.elapsedTime {
-//                print("LyricsWindowController: Elapsed time updated: \(newElapsedTime)")
 
-                self.elapsedTime = newElapsedTime
-                self.updateTrack()
+            let newElapsedTime = playbackDelegate.seekPosition.timeElapsed
+            if newElapsedTime != elapsedTime {
+                elapsedTime = newElapsedTime
+                updateLyricsPosition()
             }
         }
     }
-    
-    // Stop update timer
+
     private func stopUpdateTimer() {
         updateTimer?.invalidate()
         updateTimer = nil
-    }
-    
-    deinit {
-        stopUpdateTimer()
-    }
-
-    // MARK: - Update UI
-
-    func updateTrack(_ track: Track? = nil, lyrics: Lyrics? = nil) {
-        let oldTrack = self.track
-        self.track = track ?? playbackDelegate.playingTrack
-
-        let lyricsText = self.track?.lyrics ?? ""
-        self.lyrics = lyrics ?? Lyrics(lyricsText)
-
-        self.elapsedTime = playbackDelegate.seekPosition.timeElapsed
-        self.isPlaying = playbackDelegate.state == .playing
-
-        DispatchQueue.main.async { [self] in
-            // Create new lyricsView when track changes or lyricsView is nil
-            if self.track != oldTrack || lyricsView == nil {
-                let newLyricsView = self.createLyricsView(
-                    track: self.track?.musicTrack,
-                    lyrics: self.lyrics,
-                    elapsedTime: self.elapsedTime,
-                    isPlaying: self.isPlaying
-                )
-
-                self.lyricsView = newLyricsView
-                self.hostingView?.rootView = newLyricsView
-            } else {
-                // If track hasn't changed, just update the playback position
-                self.lyricsView?.seekTo(position: self.elapsedTime, isPlaying: self.isPlaying)
-            }
-        }
     }
 
     // MARK: - Notification Handlers
 
     private func trackTransitioned(_ notif: TrackTransitionNotification) {
-        print("LyricsWindowController: Track transitioned")
-        updateTrack(notif.endTrack)
+        updateTrackInfo()
     }
 
     private func trackInfoUpdated(_ notif: TrackInfoUpdatedNotification) {
-        print("LyricsWindowController: Track info updated")
+        updateTrackInfo()
     }
 
-    /// Handle play or pause event.
     private func playbackStateChanged() {
-        print("LyricsWindowController: Playback state changed")
-        updateTrack()
+        updateTrackInfo()
     }
 
     private func seekPerformed() {
-        print("LyricsWindowController: Seek performed")
-        updateTrack()
+        updateTrackInfo()
+    }
+
+    deinit {
+        stopUpdateTimer()
+        messenger.unsubscribeFromAll()
     }
 }
 
