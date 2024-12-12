@@ -39,7 +39,8 @@ struct LyricsScrollView: View {
 
         if let track = track, let lyrics = lyrics {
             let coreState: LyricsXCoreState = {
-                let playbackState: MusicPlayer.PlaybackState = isPlaying ? .playing(time: elapsedTime) : .paused(time: elapsedTime)
+                let playbackState: MusicPlayer.PlaybackState =
+                    isPlaying ? .playing(time: elapsedTime) : .paused(time: elapsedTime)
                 let player = MusicPlayerState(
                     player: MusicPlayers.Virtual(track: track, state: playbackState))
 
@@ -50,7 +51,8 @@ struct LyricsScrollView: View {
                     searching.searchTerm = .info(title: title, artist: artist)
                 }
 
-                let progressing = LyricsProgressingState(lyrics: lyrics, playbackState: playbackState)
+                let progressing = LyricsProgressingState(
+                    lyrics: lyrics, playbackState: playbackState)
 
                 return LyricsXCoreState(
                     playerState: player,
@@ -78,36 +80,37 @@ struct LyricsScrollView: View {
     }
 
     var body: some View {
-        if let viewStore {
-            if #available(macOS 13.0, *) {
-                LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
-                    let position = self.lyrics?[index].position ?? 0
-                    seekTo(position: position, isPlaying: isPlaying)
+        Group {
+            if let viewStore {
+                if #available(macOS 13.0, *) {
+                    LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
+                        let position = self.lyrics?[index].position ?? 0
+                        seekTo(position: position, isPlaying: isPlaying)
 
-                    withAnimation(.easeInOut) {
-                        proxy.scrollTo(index, anchor: .center)
+                        withAnimation(.easeInOut) {
+                            proxy.scrollTo(index, anchor: .center)
+                        }
+
+                        onLyricsTap?(index, proxy)
                     }
-
-                    onLyricsTap?(index, proxy)
+                    .environmentObject(viewStore)
+                    .padding(.horizontal)
+                } else {
+                    Text("Lyrics view not available on this version of macOS")
                 }
-                .environmentObject(viewStore)
-                .padding(.horizontal)
-                .frame(minWidth: 300, minHeight: 300)
             } else {
-               Text("Lyrics view not available on this version of macOS")
-                    .frame(minWidth: 300, minHeight: 300)
+                Text("No lyrics available")
             }
-        } else {
-            Text("No lyrics available")
-                .frame(minWidth: 300, minHeight: 300)
         }
+        .frame(minWidth: 300, minHeight: 300)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     /// Seek to position.
     public func seekTo(position: TimeInterval, isPlaying: Bool) {
-        let playbackState: MusicPlayer.PlaybackState = isPlaying ? .playing(time: position) : .paused(time: position)
+        let playbackState: MusicPlayer.PlaybackState =
+            isPlaying ? .playing(time: position) : .paused(time: position)
         let progressingAction = LyricsProgressingAction.playbackStateUpdated(playbackState)
         viewStore?.send(.progressingAction(progressingAction))
     }
 }
-
