@@ -2170,6 +2170,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		030EFB2F2D0B22C20070A81F /* LyricsView */ = {
+			isa = PBXGroup;
+			children = (
+				033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */,
+				033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */,
+			);
+			path = LyricsView;
+			sourceTree = "<group>";
+		};
 		3E0215B92C23490E00865AC2 /* FileWatcher */ = {
 			isa = PBXGroup;
 			children = (
@@ -3639,8 +3648,6 @@
 			children = (
 				3E36BD3026A68E9800B6E28B /* LyricsTrackInfo.xib */,
 				3E36BD3326A68EAA00B6E28B /* LyricsTrackInfoViewController.swift */,
-				033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */,
-				033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */,
 			);
 			path = Lyrics;
 			sourceTree = "<group>";
@@ -4004,6 +4011,7 @@
 		3E6C0F1A25CEB98500BF0D07 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				030EFB2F2D0B22C20070A81F /* LyricsView */,
 				3E6C0FDD25CEB98600BF0D07 /* Menus */,
 				3E4C76392AD7701300DDED45 /* AppSetup */,
 				3E9E58FC25DB6B150064EB5F /* AppModeManagement */,
