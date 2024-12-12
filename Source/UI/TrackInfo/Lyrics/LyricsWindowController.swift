@@ -3,7 +3,6 @@
 //  Aural
 //
 //  Created by tisfeng on 2024/12/3.
-//  Copyright © 2024 Kartik Venugopal. All rights reserved.
 //
 
 import Cocoa
@@ -125,6 +124,7 @@ class LyricsWindowController: NSWindowController {
     // MARK: - Update UI
 
     func updateTrack(_ track: Track? = nil, lyrics: Lyrics? = nil) {
+        let oldTrack = self.track
         self.track = track ?? playbackDelegate.playingTrack
 
         let lyricsText = self.track?.lyrics ?? ""
@@ -134,7 +134,8 @@ class LyricsWindowController: NSWindowController {
         self.isPlaying = playbackDelegate.state == .playing
 
         DispatchQueue.main.async { [self] in
-            if lyricsView?.track == nil {
+            // Create new lyricsView when track changes or lyricsView is nil
+            if self.track != oldTrack || lyricsView == nil {
                 let newLyricsView = self.createLyricsView(
                     track: self.track?.musicTrack,
                     lyrics: self.lyrics,
@@ -144,9 +145,10 @@ class LyricsWindowController: NSWindowController {
 
                 self.lyricsView = newLyricsView
                 self.hostingView?.rootView = newLyricsView
+            } else {
+                // If track hasn't changed, just update the playback position
+                self.lyricsView?.seekTo(position: self.elapsedTime, isPlaying: self.isPlaying)
             }
-
-            self.lyricsView?.seekTo(position: self.elapsedTime, isPlaying: self.isPlaying)
         }
     }
 
