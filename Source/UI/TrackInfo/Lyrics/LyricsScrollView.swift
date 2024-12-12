@@ -19,10 +19,10 @@ struct LyricsScrollView: View {
     var lyrics: Lyrics?
     var elapsedTime: Double = 0
     var isPlaying = true
-    public let onLyricsTap: ((Int, ScrollViewProxy) -> Void)?
+    let onLyricsTap: ((Int, ScrollViewProxy) -> Void)?
 
     @State private var isAutoScrollEnabled = true
-    public let viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
+    private var viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
 
     init(
         track: MusicTrack? = nil,
@@ -36,46 +36,17 @@ struct LyricsScrollView: View {
         self.elapsedTime = elapsedTime
         self.isPlaying = isPlaying
         self.onLyricsTap = onLyricsTap
+        self.viewStore = nil
 
-        if let track = track, let lyrics = lyrics {
-            let coreState: LyricsXCoreState = {
-                let playbackState: MusicPlayer.PlaybackState =
-                    isPlaying ? .playing(time: elapsedTime) : .paused(time: elapsedTime)
-                let player = MusicPlayerState(
-                    player: MusicPlayers.Virtual(track: track, state: playbackState))
-
-                var searching = LyricsSearchingState(track: track)
-                searching.currentLyrics = lyrics
-                searching.searchResultSorted = [lyrics]
-                if let title = track.title, let artist = track.artist {
-                    searching.searchTerm = .info(title: title, artist: artist)
-                }
-
-                let progressing = LyricsProgressingState(
-                    lyrics: lyrics, playbackState: playbackState)
-
-                return LyricsXCoreState(
-                    playerState: player,
-                    searchingState: searching,
-                    progressingState: progressing
-                )
-            }()
-
-            let store = Store(
-                initialState: coreState,
-                reducer: Reducer(LyricsProgressingState.reduce)
-                    .optional()
-                    .pullback(
-                        state: \LyricsXCoreState.progressingState,
-                        action: /LyricsXCoreAction.progressingAction,
-                        environment: { $0 }),
-                environment: .default)
-
+        if let track, let lyrics {
+            let store = createStore(
+                track: track,
+                lyrics: lyrics,
+                elapsedTime: elapsedTime,
+                isPlaying: isPlaying
+            )
             self.viewStore = ViewStore(store)
-
             seekTo(position: elapsedTime, isPlaying: isPlaying)
-        } else {
-            self.viewStore = nil
         }
     }
 
@@ -106,10 +77,53 @@ struct LyricsScrollView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
+    private func createStore(
+        track: MusicTrack,
+        lyrics: Lyrics,
+        elapsedTime: Double,
+        isPlaying: Bool
+    ) -> Store<LyricsXCoreState, LyricsXCoreAction> {
+        let playbackState = createPlaybackState(elapsedTime: elapsedTime, isPlaying: isPlaying)
+        let player = MusicPlayerState(player: MusicPlayers.Virtual(track: track, state: playbackState))
+
+        let searching = createSearchingState(track: track, lyrics: lyrics)
+        let progressing = LyricsProgressingState(lyrics: lyrics, playbackState: playbackState)
+
+        let coreState = LyricsXCoreState(
+            playerState: player,
+            searchingState: searching,
+            progressingState: progressing
+        )
+
+        return Store(
+            initialState: coreState,
+            reducer: Reducer(LyricsProgressingState.reduce)
+                .optional()
+                .pullback(
+                    state: \LyricsXCoreState.progressingState,
+                    action: /LyricsXCoreAction.progressingAction,
+                    environment: { $0 }),
+            environment: .default)
+    }
+
+    private func createPlaybackState(elapsedTime: Double, isPlaying: Bool) -> MusicPlayer.PlaybackState {
+        isPlaying ? .playing(time: elapsedTime) : .paused(time: elapsedTime)
+    }
+
+    private func createSearchingState(track: MusicTrack, lyrics: Lyrics) -> LyricsSearchingState {
+        var searching = LyricsSearchingState(track: track)
+        searching.currentLyrics = lyrics
+        searching.searchResultSorted = [lyrics]
+        if let title = track.title, let artist = track.artist {
+            searching.searchTerm = .info(title: title, artist: artist)
+        }
+        return searching
+    }
+
     /// Seek to position.
     public func seekTo(position: TimeInterval, isPlaying: Bool) {
         let playbackState: MusicPlayer.PlaybackState =
-            isPlaying ? .playing(time: position) : .paused(time: position)
+        isPlaying ? .playing(time: position) : .paused(time: position)
         let progressingAction = LyricsProgressingAction.playbackStateUpdated(playbackState)
         viewStore?.send(.progressingAction(progressingAction))
     }
