@@ -70,9 +70,11 @@ class LyricsWindowController: NSWindowController {
             lyrics: lyrics,
             elapsedTime: elapsedTime,
             isPlaying: isPlaying
-        ) { [weak self] position in
-            print("Tap to seek position \(position)")
+        ) { [weak self] index, proxy in
+            let position = self?.lyrics?[index].position ?? 0
             self?.messenger.publish(.Player.jumpToTime, payload: position)
+
+            print("Tap to seek position \(position)")
         }
     }
 
@@ -144,7 +146,7 @@ class LyricsWindowController: NSWindowController {
                 self.hostingView?.rootView = newLyricsView
             }
 
-            self.lyricsView?.seekTo(position: self.elapsedTime)
+            self.lyricsView?.seekTo(position: self.elapsedTime, isPlaying: self.isPlaying)
         }
     }
 

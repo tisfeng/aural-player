@@ -19,7 +19,7 @@ struct LyricsScrollView: View {
     var lyrics: Lyrics?
     var elapsedTime: Double = 0
     var isPlaying = true
-    public let onLyricsTap: ((TimeInterval) -> Void)?
+    public let onLyricsTap: ((Int, ScrollViewProxy) -> Void)?
 
     @State private var isAutoScrollEnabled = true
     public let viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
@@ -29,7 +29,7 @@ struct LyricsScrollView: View {
         lyrics: Lyrics? = nil,
         elapsedTime: Double = 0,
         isPlaying: Bool = true,
-        onLyricsTap: ((TimeInterval) -> Void)? = nil
+        onLyricsTap: ((Int, ScrollViewProxy) -> Void)? = nil
     ) {
         self.track = track
         self.lyrics = lyrics
@@ -71,7 +71,7 @@ struct LyricsScrollView: View {
 
             self.viewStore = ViewStore(store)
 
-            seekTo(position: elapsedTime)
+            seekTo(position: elapsedTime, isPlaying: isPlaying)
         } else {
             self.viewStore = nil
         }
@@ -80,12 +80,15 @@ struct LyricsScrollView: View {
     var body: some View {
         if let viewStore {
             if #available(macOS 13.0, *) {
-                LyricsView(
-                    isAutoScrollEnabled: $isAutoScrollEnabled,
-                    showLockButton: false
-                ) { position in
-                    seekTo(position: position)
-                    onLyricsTap?(position)
+                LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
+                    let position = self.lyrics?[index].position ?? 0
+                    seekTo(position: position, isPlaying: isPlaying)
+
+                    withAnimation(.easeInOut) {
+                        proxy.scrollTo(index, anchor: .center)
+                    }
+
+                    onLyricsTap?(index, proxy)
                 }
                 .environmentObject(viewStore)
                 .padding(.horizontal)
@@ -100,20 +103,11 @@ struct LyricsScrollView: View {
         }
     }
 
-    /// Play lyrics at position.
-    public func seekTo(position: TimeInterval) {
-        if let progressing = viewStore?.progressingState {
-            if progressing.lyrics.lineIndex(at: position) != nil {
-                let playbackState = playbackState(at: position)
-                let action = LyricsProgressingAction.playbackStateUpdated(playbackState)
-                viewStore?.send(.progressingAction(action))
-            }
-        }
-    }
-
-    /// Play back state at position.
-    public func playbackState(at position: TimeInterval) -> MusicPlayer.PlaybackState {
-        isPlaying ? .playing(time: position) : .paused(time: position)
+    /// Seek to position.
+    public func seekTo(position: TimeInterval, isPlaying: Bool) {
+        let playbackState: MusicPlayer.PlaybackState = isPlaying ? .playing(time: position) : .paused(time: position)
+        let progressingAction = LyricsProgressingAction.playbackStateUpdated(playbackState)
+        viewStore?.send(.progressingAction(progressingAction))
     }
 }
 
