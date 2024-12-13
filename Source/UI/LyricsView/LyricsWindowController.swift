@@ -28,13 +28,14 @@ class LyricsWindowController: NSWindowController {
 
     override init(window: NSWindow?) {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 300, height: 500),
+            contentRect: NSRect(x: 0, y: 0, width: 300, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
         )
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
+        window.identifier = .init(rawValue: WindowID.lyrics.rawValue)
         window.center()
 
         super.init(window: window)
