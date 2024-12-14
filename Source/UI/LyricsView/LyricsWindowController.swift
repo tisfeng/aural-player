@@ -21,14 +21,11 @@ class LyricsWindowController: NSWindowController {
     private var elapsedTime: Double = 0
     private var isPlaying: Bool = false
 
-    // Timer to update elapsed time
-    private var updateTimer: Timer?
-
     lazy var messenger = Messenger(for: self)
 
     override init(window: NSWindow?) {
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 300, height: 600),
+            contentRect: NSRect(x: 0, y: 0, width: 400, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
             defer: false
@@ -82,6 +79,8 @@ class LyricsWindowController: NSWindowController {
         } else {
             hostingView?.rootView = lyricsView
         }
+
+        lyricsView.seekTo(position: elapsedTime, isPlaying: isPlaying)
     }
 
     // MARK: - Setup
@@ -92,8 +91,6 @@ class LyricsWindowController: NSWindowController {
         messenger.subscribeAsync(to: .Player.trackNotPlayed, handler: trackTransitioned)
         messenger.subscribeAsync(to: .Player.playbackStateChanged, handler: playbackStateChanged)
         messenger.subscribeAsync(to: .Player.seekPerformed, handler: seekPerformed)
-
-        startUpdateTimer()
     }
 
     // MARK: - Update Methods
@@ -111,30 +108,6 @@ class LyricsWindowController: NSWindowController {
     private func updatePlaybackState() {
         elapsedTime = playbackDelegate.seekPosition.timeElapsed
         isPlaying = playbackDelegate.state == .playing
-    }
-
-    private func updateLyricsPosition() {
-        lyricsView?.seekTo(position: elapsedTime, isPlaying: isPlaying)
-    }
-
-    // MARK: - Timer Management
-
-    private func startUpdateTimer() {
-        stopUpdateTimer()
-        updateTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-
-            let newElapsedTime = playbackDelegate.seekPosition.timeElapsed
-            if newElapsedTime != elapsedTime {
-                elapsedTime = newElapsedTime
-                updateLyricsPosition()
-            }
-        }
-    }
-
-    private func stopUpdateTimer() {
-        updateTimer?.invalidate()
-        updateTimer = nil
     }
 
     // MARK: - Notification Handlers
@@ -156,7 +129,6 @@ class LyricsWindowController: NSWindowController {
     }
 
     deinit {
-        stopUpdateTimer()
         messenger.unsubscribeFromAll()
     }
 }

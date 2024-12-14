@@ -46,7 +46,6 @@ struct LyricsScrollView: View {
                 isPlaying: isPlaying
             )
             self.viewStore = ViewStore(store)
-            seekTo(position: elapsedTime, isPlaying: isPlaying)
         }
     }
 
@@ -122,8 +121,7 @@ struct LyricsScrollView: View {
 
     /// Seek to position.
     public func seekTo(position: TimeInterval, isPlaying: Bool) {
-        let playbackState: MusicPlayer.PlaybackState =
-        isPlaying ? .playing(time: position) : .paused(time: position)
+        let playbackState = createPlaybackState(elapsedTime: position, isPlaying: isPlaying)
         let progressingAction = LyricsProgressingAction.playbackStateUpdated(playbackState)
         viewStore?.send(.progressingAction(progressingAction))
     }
