@@ -17,6 +17,10 @@ fileprivate let playQueueHeight_verticalFullStack: CGFloat = 225
 fileprivate let playQueueHeight_verticalPlayerAndPlayQueue: CGFloat = 500
 fileprivate let playQueueHeight_bigBottomPlayQueue: CGFloat = 500
 
+// Lyrics window size
+let lyricsHeight: CGFloat = 400
+let lyricsWidth: CGFloat = 600
+
 enum WindowLayoutPresets: String, CaseIterable {
     
     case verticalStack
@@ -40,11 +44,6 @@ enum WindowLayoutPresets: String, CaseIterable {
     // Effects window size (never changes)
     static let effectsWindowWidth: CGFloat = 480
     static let effectsWindowHeight: CGFloat = 200
-
-    // Lyrics window size
-    static let lyricsWindowWidth: CGFloat = 400
-    static let lyricsWindowHeight: CGFloat =
-        mainWindowHeight + effectsWindowHeight + playQueueHeight_verticalFullStack
 
     // Converts a user-friendly display name to an instance of PitchShiftPresets
     static func fromDisplayName(_ displayName: String) -> WindowLayoutPresets? {
@@ -186,11 +185,6 @@ enum WindowLayoutPresets: String, CaseIterable {
                 mainWindowOrigin.x + Self.mainWindowWidth + Self.effectsWindowWidth + twoGaps,
                 mainWindowOrigin.y)
 
-            // Set lyrics window position at the right of main window
-            lyricsWindowOrigin = NSMakePoint(
-                mainWindowOrigin.x + Self.mainWindowWidth + gap,
-                mainWindowOrigin.y)
-
         case .bigBottomPlayQueue:
 
             let xPadding =
@@ -210,11 +204,6 @@ enum WindowLayoutPresets: String, CaseIterable {
             playQueueWindowOrigin = NSMakePoint(
                 mainWindowOrigin.x,
                 mainWindowOrigin.y - gap - playQueueHeight)
-
-            // Set lyrics window position at the right of main window
-            lyricsWindowOrigin = NSMakePoint(
-                mainWindowOrigin.x + Self.mainWindowWidth + gap,
-                mainWindowOrigin.y)
 
         case .bigLeftPlayQueue:
 
@@ -238,11 +227,6 @@ enum WindowLayoutPresets: String, CaseIterable {
                 mainWindowOrigin.x - gap - playQueueWidth,
                 mainWindowOrigin.y - gap - Self.effectsWindowHeight)
 
-            // Set lyrics window position at the right of main window
-            lyricsWindowOrigin = NSMakePoint(
-                mainWindowOrigin.x + Self.mainWindowWidth + gap,
-                mainWindowOrigin.y)
-
         case .bigRightPlayQueue:
 
             let xPadding = visibleFrame.width - (Self.mainWindowWidth + gap + Self.mainWindowWidth)
@@ -262,11 +246,6 @@ enum WindowLayoutPresets: String, CaseIterable {
             playQueueWindowOrigin = NSMakePoint(
                 mainWindowOrigin.x + Self.mainWindowWidth + gap,
                 mainWindowOrigin.y - gap - Self.effectsWindowHeight)
-
-            // Set lyrics window position at the right of main window
-            lyricsWindowOrigin = NSMakePoint(
-                mainWindowOrigin.x + Self.mainWindowWidth + gap,
-                mainWindowOrigin.y)
 
         case .verticalPlayerAndPlayQueue:
 
@@ -303,11 +282,6 @@ enum WindowLayoutPresets: String, CaseIterable {
 
             playQueueWindowOrigin = NSMakePoint(
                 mainWindowOrigin.x + Self.mainWindowWidth + gap, mainWindowOrigin.y)
-
-            // Set lyrics window position at the right of main window
-            lyricsWindowOrigin = NSMakePoint(
-                mainWindowOrigin.x + Self.mainWindowWidth + gap,
-                mainWindowOrigin.y)
         }
 
         let mainWindowFrame: NSRect = NSRect(
@@ -337,7 +311,7 @@ enum WindowLayoutPresets: String, CaseIterable {
         if let lyricsWindowOrigin = lyricsWindowOrigin {
             let lyricsWindowFrame: NSRect = NSRect(
                 origin: lyricsWindowOrigin,
-                size: NSMakeSize(Self.lyricsWindowWidth, Self.lyricsWindowHeight))
+                size: NSMakeSize(lyricsWidth, lyricsHeight))
             let lyricsWindow: LayoutWindow = .init(id: .lyrics, frame: lyricsWindowFrame)
 
             displayedWindows.append(lyricsWindow)
