@@ -97,12 +97,52 @@ class LyricsWindowController: NSWindowController {
 
     private func updateTrackInfo() {
         track = playbackDelegate.playingTrack
-        lyrics = Lyrics(track?.lyrics ?? "")
+        lyrics = getLyrics(from: track)
         updatePlaybackState()
 
         DispatchQueue.main.async {
             self.updateLyricsView()
         }
+    }
+
+    private func getLyrics(from track: Track?) -> Lyrics? {
+        guard let track = track else {
+            return nil
+        }
+        
+        // 1. First try to find lyrics from lrc/lrcx file
+        if let lyricsFromFile = findLyricsFile(for: track.file) {
+            do {
+                let lyricsText = try String(contentsOf: lyricsFromFile, encoding: .utf8)
+                return Lyrics(lyricsText)
+            } catch {
+                print("Error reading lyrics file: \(error)")
+            }
+        }
+        
+        // 2. Fallback to embedded lyrics
+        return Lyrics(track.lyrics ?? "")
+    }
+    
+    private func findLyricsFile(for audioFile: URL) -> URL? {
+        let directory = audioFile.deletingLastPathComponent()
+        let filename = audioFile.deletingPathExtension().lastPathComponent
+        
+        // Try .lrc first, then .lrcx
+        let lrcFile = directory.appendingPathComponent(filename + ".lrc")
+        let lrcxFile = directory.appendingPathComponent(filename + ".lrcx")
+        
+        let fileManager = FileManager.default
+        
+        if fileManager.fileExists(atPath: lrcFile.path) {
+            return lrcFile
+        }
+        
+        if fileManager.fileExists(atPath: lrcxFile.path) {
+            return lrcxFile
+        }
+        
+        return nil
     }
 
     private func updatePlaybackState() {
