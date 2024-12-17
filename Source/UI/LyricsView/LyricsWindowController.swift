@@ -97,7 +97,7 @@ class LyricsWindowController: NSWindowController {
 
     private func updateTrackInfo() {
         track = playbackDelegate.playingTrack
-        lyrics = getLyrics(from: track)
+        lyrics = track?.fetchLyrics()
         updatePlaybackState()
 
         DispatchQueue.main.async {
@@ -134,8 +134,3 @@ class LyricsWindowController: NSWindowController {
     }
 }
 
-extension Track {
-    var musicTrack: MusicTrack {
-        MusicTrack(id: title ?? "", title: title, album: album, artist: artist, duration: duration)
-    }
-}
