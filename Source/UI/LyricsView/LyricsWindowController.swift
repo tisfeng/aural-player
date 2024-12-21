@@ -23,8 +23,12 @@ class LyricsWindowController: NSWindowController {
 
     lazy var messenger = Messenger(for: self)
 
+    fileprivate lazy var theDelegate: SnappingWindowDelegate = {
+        SnappingWindowDelegate(window: self.window! as! SnappingWindow)
+    }()
+
     override init(window: NSWindow?) {
-        let window = NSWindow(
+        let window = SnappingWindow(
             contentRect: NSRect(x: 0, y: 0, width: lyricsWidth, height: lyricsHeight),
             styleMask: [.titled, .closable, .miniaturizable, .resizable],
             backing: .buffered,
@@ -40,7 +44,12 @@ class LyricsWindowController: NSWindowController {
 
         window.backgroundColor = systemColorScheme.backgroundColor
 
+        window.hasShadow = false
+        window.isMovableByWindowBackground = true
+
         super.init(window: window)
+
+        window.delegate = theDelegate
 
         updateLyricsView()
 
