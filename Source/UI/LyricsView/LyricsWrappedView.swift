@@ -13,7 +13,7 @@ import LyricsXCore
 import MusicPlayer
 import SwiftUI
 
-struct LyricsScrollView: View {
+struct LyricsWrappedView: View {
 
     var track: MusicTrack?
     var lyrics: Lyrics?
@@ -53,9 +53,9 @@ struct LyricsScrollView: View {
     }
 
     var body: some View {
-        Group {
-            if let viewStore {
-                if #available(macOS 13.0, *) {
+        if #available(macOS 13.0, *) {
+            Group {
+                if let viewStore {
                     LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
                         let position = self.lyrics?[index].position ?? 0
                         seekTo(position: position, isPlaying: isPlaying)
@@ -68,22 +68,24 @@ struct LyricsScrollView: View {
                     }
                     .environmentObject(viewStore)
                     .padding(.horizontal)
+
                 } else {
-                    Text("Lyrics view not available on this version of macOS")
+                    Text("No lyrics available")
                 }
-            } else {
-                Text("No lyrics available")
             }
-        }
-        .frame(minWidth: 300, minHeight: 300)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Rectangle().fill(Color.systemBackground))
-        .contextMenu {
-            Button(action: {
-                showSearchLyricsWindow()
-            }) {
-                Label("Search Lyrics", systemImage: "magnifyingglass")
+            .frame(minWidth: 300, minHeight: 300)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .preferredColorScheme(.light)
+            .background(Rectangle().fill(Color.init(nsColor: systemColorScheme.backgroundColor)))
+            .contextMenu {
+                Button(action: {
+                    showSearchLyricsWindow()
+                }) {
+                    Text("Search Lyrics")
+                }
             }
+        } else {
+            Text("Lyrics only available on macOS 13.0 or later")
         }
     }
 

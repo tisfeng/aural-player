@@ -13,8 +13,8 @@ import SwiftUI
 /// Controller for the Lyrics window, host LyricsScrollView
 class LyricsWindowController: NSWindowController {
 
-    private var hostingView: NSHostingView<LyricsScrollView>?
-    private var lyricsView: LyricsScrollView?
+    private var hostingView: NSHostingView<LyricsWrappedView>?
+    private var lyricsView: LyricsWrappedView?
 
     private var track: Track?
     private var lyrics: Lyrics?
@@ -34,6 +34,11 @@ class LyricsWindowController: NSWindowController {
         window.titleVisibility = .hidden
         window.identifier = .init(rawValue: WindowID.lyrics.rawValue)
         window.center()
+
+        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
+        window.standardWindowButton(.zoomButton)?.isHidden = true
+
+        window.backgroundColor = systemColorScheme.backgroundColor
 
         super.init(window: window)
 
@@ -61,7 +66,7 @@ class LyricsWindowController: NSWindowController {
     // MARK: - View Management
 
     private func updateLyricsView() {
-        let lyricsView =  LyricsScrollView(
+        let lyricsView =  LyricsWrappedView(
             track: track?.musicTrack,
             lyrics: lyrics,
             elapsedTime: elapsedTime,

@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		030E0F662D0566920040D030 /* LyricsXCore in Frameworks */ = {isa = PBXBuildFile; productRef = 030E0F652D0566920040D030 /* LyricsXCore */; };
-		033EA0F82CFDAE5E0017F86C /* LyricsScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */; };
+		033EA0F82CFDAE5E0017F86C /* LyricsWrappedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA0F72CFDAE5E0017F86C /* LyricsWrappedView.swift */; };
 		033EA1822CFF0AA30017F86C /* LyricsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */; };
 		03B04DD32D113D3300507C6F /* Track+Lyrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B04DD22D113D3300507C6F /* Track+Lyrics.swift */; };
 		3E0217D62C23490E00865AC2 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B62C23490E00865AC2 /* FileWatcher.swift */; };
@@ -1031,7 +1031,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsScrollView.swift; sourceTree = "<group>"; };
+		033EA0F72CFDAE5E0017F86C /* LyricsWrappedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsWrappedView.swift; sourceTree = "<group>"; };
 		033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsWindowController.swift; sourceTree = "<group>"; };
 		03B04DD22D113D3300507C6F /* Track+Lyrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Track+Lyrics.swift"; sourceTree = "<group>"; };
 		3E0215B62C23490E00865AC2 /* FileWatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
@@ -2175,7 +2175,7 @@
 		030EFB2F2D0B22C20070A81F /* LyricsView */ = {
 			isa = PBXGroup;
 			children = (
-				033EA0F72CFDAE5E0017F86C /* LyricsScrollView.swift */,
+				033EA0F72CFDAE5E0017F86C /* LyricsWrappedView.swift */,
 				033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */,
 				03B04DD22D113D3300507C6F /* Track+Lyrics.swift */,
 			);
@@ -5887,7 +5887,7 @@
 				3EF020492C597E88005A841B /* AVChannelLayout+Extensions.swift in Sources */,
 				3E5864A02B76DD0000BDB5A6 /* PlayerViewController.swift in Sources */,
 				3E0218062C23490E00865AC2 /* ReverbUnit.swift in Sources */,
-				033EA0F82CFDAE5E0017F86C /* LyricsScrollView.swift in Sources */,
+				033EA0F82CFDAE5E0017F86C /* LyricsWrappedView.swift in Sources */,
 				3E0218C72C23490E00865AC2 /* PlaybackInfoDelegateProtocol.swift in Sources */,
 				3E0219692C23490E00865AC2 /* Images.swift in Sources */,
 				3E2C4BD92B38E5F800FC65DD /* SearchWindowController.swift in Sources */,
