@@ -20,6 +20,7 @@ struct LyricsScrollView: View {
     var elapsedTime: Double = 0
     var isPlaying = true
     let onLyricsTap: ((Int, ScrollViewProxy) -> Void)?
+    let onLyricsUpdate: ((Lyrics) -> Void)?
 
     public var viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
 
@@ -30,13 +31,15 @@ struct LyricsScrollView: View {
         lyrics: Lyrics? = nil,
         elapsedTime: Double = 0,
         isPlaying: Bool = true,
-        onLyricsTap: ((Int, ScrollViewProxy) -> Void)? = nil
+        onLyricsTap: ((Int, ScrollViewProxy) -> Void)? = nil,
+        onLyricsUpdate: ((Lyrics) -> Void)? = nil
     ) {
         self.track = track
         self.lyrics = lyrics
         self.elapsedTime = elapsedTime
         self.isPlaying = isPlaying
         self.onLyricsTap = onLyricsTap
+        self.onLyricsUpdate = onLyricsUpdate
         self.viewStore = nil
 
         if let track, let lyrics {
@@ -74,6 +77,14 @@ struct LyricsScrollView: View {
         }
         .frame(minWidth: 300, minHeight: 300)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Rectangle().fill(Color.systemBackground))
+        .contextMenu {
+            Button(action: {
+                showSearchLyricsWindow()
+            }) {
+                Label("Search Lyrics", systemImage: "magnifyingglass")
+            }
+        }
     }
 
     /// Seek to position.
@@ -81,5 +92,18 @@ struct LyricsScrollView: View {
         let playbackState = createPlaybackState(elapsedTime: position, isPlaying: isPlaying)
         let progressingAction = LyricsProgressingAction.playbackStateUpdated(playbackState)
         viewStore?.send(.progressingAction(progressingAction))
+    }
+
+    /// Show search lyrics window
+    func showSearchLyricsWindow() {
+        showWindow(title: "Search Lyrics", width: 1000, height: 600) {
+            if #available(macOS 12.0, *) {
+                LyricsSearchView(musicTrack: track) { lyrics in
+                    self.onLyricsUpdate?(lyrics)
+                }
+            } else {
+                // Fallback on earlier versions
+            }
+        }
     }
 }

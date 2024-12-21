@@ -10,21 +10,32 @@ import Foundation
 import LyricsCore
 import MusicPlayer
 
+extension Lyrics {
+    /// Saves lyrics to the lyrics directory with .lrcx format.
+    func persistToFile(_ fileName: String) {
+        let url = FilesAndPaths.lyricsDir.appendingPathComponent(fileName + ".lrcx")
+        persistLyrics(self, to: url)
+    }
+
+    /// Persists lyrics content to a file
+    ///
+    /// - Parameters:
+    ///   - lyrics: The lyrics to save
+    ///   - url: The destination URL
+    private func persistLyrics(_ lyrics: Lyrics, to url: URL) {
+        do {
+            try lyrics.description.write(to: url, atomically: true, encoding: .utf8)
+        } catch {
+            print("Failed to write lyrics to \(url.path): \(error.localizedDescription)")
+        }
+    }
+}
+
 extension Track {
 
     /// The name of the file associated with this track, eg. "Too Far - Anna F."
     var fileName: String {
         fileSystemInfo.fileName
-    }
-
-    /// Saves lyrics to the lyrics directory with .lrcx format.
-    /// The fileName will be the same as the audio file name.
-    func persistLyricsToFile() {
-        let url = FilesAndPaths.lyricsDir.appendingPathComponent(fileName + ".lrcx")
-
-        if let lyrics = fetchLyrics() {
-            persistLyrics(lyrics, to: url)
-        }
     }
 
     /// Fetches lyrics for this track from multiple sources in the following order:
@@ -92,18 +103,7 @@ extension Track {
         }
     }
 
-    /// Persists lyrics content to a file
-    ///
-    /// - Parameters:
-    ///   - lyrics: The lyrics to save
-    ///   - url: The destination URL
-    private func persistLyrics(_ lyrics: Lyrics, to url: URL) {
-        do {
-            try lyrics.description.write(to: url, atomically: true, encoding: .utf8)
-        } catch {
-            print("Failed to write lyrics to \(url.path): \(error.localizedDescription)")
-        }
-    }
+
 }
 
 extension Track {

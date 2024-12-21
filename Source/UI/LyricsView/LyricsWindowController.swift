@@ -61,15 +61,22 @@ class LyricsWindowController: NSWindowController {
     // MARK: - View Management
 
     private func updateLyricsView() {
-        let lyricsView = LyricsScrollView(
+        let lyricsView =  LyricsScrollView(
             track: track?.musicTrack,
             lyrics: lyrics,
             elapsedTime: elapsedTime,
-            isPlaying: isPlaying
-        ) { [weak self] index, proxy in
-            let position = self?.lyrics?[index].position ?? 0
-            self?.messenger.publish(.Player.jumpToTime, payload: position)
-        }
+            isPlaying: isPlaying,
+            onLyricsTap: { [weak self] index, proxy in
+                let position = self?.lyrics?[index].position ?? 0
+                self?.messenger.publish(.Player.jumpToTime, payload: position)
+            },
+            onLyricsUpdate: { [weak self] lyrics in
+                if let fileName = self?.track?.fileName {
+                    lyrics.persistToFile(fileName)
+                }
+                self?.updateTrackInfo()
+            }
+        )
 
         self.lyricsView = lyricsView
 
