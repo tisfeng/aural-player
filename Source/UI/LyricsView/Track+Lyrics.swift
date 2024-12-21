@@ -52,14 +52,14 @@ extension Track {
         }
 
         // 2. Then try to find lyrics from audio file directory
-        if let lyrics = loadLyricsFromDirectory(file.deletingLastPathComponent()) {
-            return lyrics
-        }
-
-        // 3. Fallback to embedded lyrics
-        if let lyrics {
-            return Lyrics(lyrics)
-        }
+//        if let lyrics = loadLyricsFromDirectory(file.deletingLastPathComponent()) {
+//            return lyrics
+//        }
+//
+//        // 3. Fallback to embedded lyrics
+//        if let lyrics {
+//            return Lyrics(lyrics)
+//        }
 
         return nil
     }

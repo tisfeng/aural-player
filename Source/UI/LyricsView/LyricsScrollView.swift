@@ -17,8 +17,8 @@ struct LyricsScrollView: View {
 
     var track: MusicTrack?
     var lyrics: Lyrics?
-    var elapsedTime: Double = 0
-    var isPlaying = true
+    var elapsedTime: TimeInterval
+    var isPlaying: Bool
     let onLyricsTap: ((Int, ScrollViewProxy) -> Void)?
     let onLyricsUpdate: ((Lyrics) -> Void)?
 
@@ -96,14 +96,25 @@ struct LyricsScrollView: View {
 
     /// Show search lyrics window
     func showSearchLyricsWindow() {
-        showWindow(title: "Search Lyrics", width: 1000, height: 600) {
-            if #available(macOS 12.0, *) {
-                LyricsSearchView(musicTrack: track) { lyrics in
-                    self.onLyricsUpdate?(lyrics)
-                }
-            } else {
-                // Fallback on earlier versions
+        let windowController = NSWindowController(window: nil)
+        let window = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 1000, height: 600),
+            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        window.title = "Search Lyrics"
+        window.center()
+
+        if #available(macOS 12.0, *) {
+            let contentView = LyricsSearchView(track: track) { lyrics in
+                self.onLyricsUpdate?(lyrics)
+                windowController.close()
             }
+            window.contentView = NSHostingView(rootView: contentView)
         }
+
+        windowController.window = window
+        windowController.showWindow(nil)
     }
 }
