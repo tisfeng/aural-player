@@ -23,6 +23,8 @@ extension Lyrics {
     ///   - lyrics: The lyrics to save
     ///   - url: The destination URL
     private func persistLyrics(_ lyrics: Lyrics, to url: URL) {
+        url.parentDir.createDirectory()
+
         do {
             try lyrics.description.write(to: url, atomically: true, encoding: .utf8)
         } catch {
@@ -52,14 +54,14 @@ extension Track {
         }
 
         // 2. Then try to find lyrics from audio file directory
-//        if let lyrics = loadLyricsFromDirectory(file.deletingLastPathComponent()) {
-//            return lyrics
-//        }
-//
-//        // 3. Fallback to embedded lyrics
-//        if let lyrics {
-//            return Lyrics(lyrics)
-//        }
+        if let lyrics = loadLyricsFromDirectory(file.deletingLastPathComponent()) {
+            return lyrics
+        }
+
+        // 3. Fallback to embedded lyrics
+        if let lyrics {
+            return Lyrics(lyrics)
+        }
 
         return nil
     }
@@ -102,7 +104,6 @@ extension Track {
             return nil
         }
     }
-
 
 }
 
