@@ -16,12 +16,12 @@ extension Notification.Name {
         
         static let toggleEffects = Notification.Name("view_toggleEffects")
         static let togglePlayQueue = Notification.Name("view_togglePlayQueue")
-        static let toggleLyrics = Notification.Name("view_toggleLyrics")
         static let toggleChaptersList = Notification.Name("view_toggleChaptersList")
         static let toggleVisualizer = Notification.Name("view_toggleVisualizer")
         static let toggleTrackInfo = Notification.Name("view_toggleTrackInfo")
         static let toggleWaveform = Notification.Name("view_toggleWaveform")
-        
+        static let toggleLyrics = Notification.Name("view_toggleLyrics")
+
         static let changeWindowCornerRadius = Notification.Name("view_changeWindowCornerRadius")
         
         struct CompactPlayer {

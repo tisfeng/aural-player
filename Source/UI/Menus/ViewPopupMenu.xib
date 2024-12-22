@@ -37,12 +37,6 @@
                         <action selector="togglePlayQueueAction:" target="Ro6-ma-Phw" id="wo6-T5-iYV"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Lyrics" id="bt2-0U-e0w">
-                    <modifierMask key="keyEquivalentModifierMask"/>
-                    <connections>
-                        <action selector="toggleLyricsAction:" target="Ro6-ma-Phw" id="m4w-F0-zql"/>
-                    </connections>
-                </menuItem>
                 <menuItem title="Library" hidden="YES" enabled="NO" id="DRo-7Q-HFC">
                     <modifierMask key="keyEquivalentModifierMask"/>
                 </menuItem>
@@ -74,6 +68,12 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="toggleWaveformAction:" target="Ro6-ma-Phw" id="kw2-pe-Isj"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Lyrics" id="bt2-0U-e0w">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="toggleLyricsAction:" target="Ro6-ma-Phw" id="m4w-F0-zql"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="y9v-7f-Vob"/>

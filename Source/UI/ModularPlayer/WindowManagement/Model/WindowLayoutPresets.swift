@@ -18,8 +18,8 @@ fileprivate let playQueueHeight_verticalPlayerAndPlayQueue: CGFloat = 500
 fileprivate let playQueueHeight_bigBottomPlayQueue: CGFloat = 500
 
 // Lyrics window size
-let lyricsHeight: CGFloat = 400
-let lyricsWidth: CGFloat = 600
+let lyricsWidth: CGFloat = 400
+let lyricsHeight: CGFloat = 600
 
 enum WindowLayoutPresets: String, CaseIterable {
     

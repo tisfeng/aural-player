@@ -966,11 +966,6 @@ CA
                                     <action selector="togglePlayQueueAction:" target="JTq-Lm-LsR" id="W2s-EU-yH5"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title=" Lyrics" image="music.microphone" catalog="system" keyEquivalent="1" id="nhI-aF-wfg" userLabel="Play Queue">
-                                <connections>
-                                    <action selector="toggleLyricsAction:" target="JTq-Lm-LsR" id="tYw-gR-a6U"/>
-                                </connections>
-                            </menuItem>
                             <menuItem title=" Effects" image="slider.vertical.3" catalog="system" keyEquivalent="2" id="VRp-xb-WM7" userLabel="Effects">
                                 <connections>
                                     <action selector="toggleEffectsAction:" target="JTq-Lm-LsR" id="Fp4-Ou-ufM"/>
@@ -994,6 +989,11 @@ CA
                             <menuItem title="  Waveform" image="waveform" catalog="system" keyEquivalent="6" id="mPQ-9t-4Pz" userLabel="Waveform">
                                 <connections>
                                     <action selector="toggleWaveformAction:" target="JTq-Lm-LsR" id="nrX-kf-eA6"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title=" Lyrics" image="music.microphone" catalog="system" keyEquivalent="7" id="nhI-aF-wfg" userLabel="Lyrics">
+                                <connections>
+                                    <action selector="toggleLyricsAction:" target="JTq-Lm-LsR" id="tYw-gR-a6U"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="lhn-qh-04n"/>

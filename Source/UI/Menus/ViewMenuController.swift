@@ -74,12 +74,12 @@ class ViewMenuController: NSObject, NSMenuDelegate {
         togglePlayerMenuItem.showIf(isCompactMode)
         togglePlayerMenuItem.onIf(isCompactMode && compactPlayerUIState.displayedView == .player)
         togglePlayQueueMenuItem.onIf(appModeManager.isShowingPlayQueue)
-        toggleLyricsMenuItem.onIf(appModeManager.isShowingLyrics)
         toggleEffectsMenuItem.onIf(appModeManager.isShowingEffects)
         toggleChaptersListMenuItem.onIf(appModeManager.isShowingChaptersList)
         toggleVisualizerMenuItem.onIf(appModeManager.isShowingVisualizer)
         toggleWaveformMenuItem.onIf(appModeManager.isShowingWaveform)
-        
+        toggleLyricsMenuItem.onIf(appModeManager.isShowingLyrics)
+
         if isCompactMode {
             toggleTrackInfoMenuItem.onIf(appModeManager.isShowingTrackInfo)
         }

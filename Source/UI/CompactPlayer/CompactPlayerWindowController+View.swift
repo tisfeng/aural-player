@@ -21,7 +21,7 @@ extension CompactPlayerWindowController {
     }
 
     var isShowingLyrics: Bool {
-        false
+        true
     }
 
     var isShowingEffects: Bool {
