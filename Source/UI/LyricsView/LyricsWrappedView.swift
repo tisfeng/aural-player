@@ -67,16 +67,13 @@ struct LyricsWrappedView: View {
                         onLyricsTap?(index, proxy)
                     }
                     .environmentObject(viewStore)
-                    .padding(.horizontal)
-
+                    .padding()
                 } else {
                     Text("No lyrics available")
                 }
             }
-            .frame(minWidth: 300, minHeight: 300)
+            .frame(minWidth: 300, minHeight: 80)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .preferredColorScheme(.light)
-            .background(Rectangle().fill(Color.init(nsColor: systemColorScheme.backgroundColor)))
             .contextMenu {
                 Button(action: {
                     showSearchLyricsWindow()

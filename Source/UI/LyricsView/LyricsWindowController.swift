@@ -30,7 +30,7 @@ class LyricsWindowController: NSWindowController {
     override init(window: NSWindow?) {
         let window = SnappingWindow(
             contentRect: NSRect(x: 0, y: 0, width: lyricsWidth, height: lyricsHeight),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            styleMask: [.resizable],
             backing: .buffered,
             defer: false
         )
@@ -42,8 +42,8 @@ class LyricsWindowController: NSWindowController {
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
 
-        window.backgroundColor = systemColorScheme.backgroundColor
-
+        window.isOpaque = false
+        window.backgroundColor = .clear
         window.hasShadow = false
         window.isMovableByWindowBackground = true
 
@@ -75,7 +75,7 @@ class LyricsWindowController: NSWindowController {
     // MARK: - View Management
 
     private func updateLyricsView() {
-        let lyricsView =  LyricsWrappedView(
+        let lyricsView = LyricsWrappedView(
             track: track?.musicTrack,
             lyrics: lyrics,
             elapsedTime: elapsedTime,
@@ -96,6 +96,11 @@ class LyricsWindowController: NSWindowController {
 
         if hostingView == nil {
             hostingView = NSHostingView(rootView: lyricsView)
+            hostingView?.wantsLayer = true
+            hostingView?.layer?.cornerRadius = playerUIState.cornerRadius
+            hostingView?.layer?.masksToBounds = true
+            hostingView?.layer?.backgroundColor = systemColorScheme.backgroundColor.cgColor
+            hostingView?.appearance = .init(named: .aqua)
             window?.contentView = hostingView
         } else {
             hostingView?.rootView = lyricsView
@@ -126,7 +131,6 @@ class LyricsWindowController: NSWindowController {
         }
     }
 
-
     private func updatePlaybackState() {
         elapsedTime = playbackDelegate.seekPosition.timeElapsed
         isPlaying = playbackDelegate.state == .playing
@@ -154,4 +158,3 @@ class LyricsWindowController: NSWindowController {
         messenger.unsubscribeFromAll()
     }
 }
-
