@@ -54,6 +54,8 @@ class LyricsWindowController: NSWindowController {
         updateLyricsView()
 
         setupNotifications()
+
+        colorSchemesManager.registerSchemeObservers(self)
     }
 
     required init?(coder: NSCoder) {
@@ -99,14 +101,21 @@ class LyricsWindowController: NSWindowController {
             hostingView?.wantsLayer = true
             hostingView?.layer?.cornerRadius = playerUIState.cornerRadius
             hostingView?.layer?.masksToBounds = true
-            hostingView?.layer?.backgroundColor = systemColorScheme.backgroundColor.cgColor
-            hostingView?.appearance = .init(named: .aqua)
             window?.contentView = hostingView
         } else {
             hostingView?.rootView = lyricsView
         }
 
+        applyColorScheme(systemColorScheme)
+
         lyricsView.seekTo(position: elapsedTime, isPlaying: isPlaying)
+    }
+
+    /// Update color theme
+    func applyColorScheme(_ scheme: ColorScheme) {
+        let isLightColorScheme = scheme.primaryTextColor == .black
+        hostingView?.appearance = .init(named: isLightColorScheme ? .aqua : .darkAqua)
+        hostingView?.layer?.backgroundColor = scheme.backgroundColor.cgColor
     }
 
     // MARK: - Setup
@@ -156,5 +165,11 @@ class LyricsWindowController: NSWindowController {
 
     deinit {
         messenger.unsubscribeFromAll()
+    }
+}
+
+extension LyricsWindowController: ColorSchemeObserver {
+    func colorSchemeChanged() {
+        applyColorScheme(systemColorScheme)
     }
 }
