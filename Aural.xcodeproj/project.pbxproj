@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -11,6 +11,7 @@
 		033EA0F82CFDAE5E0017F86C /* LyricsWrappedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA0F72CFDAE5E0017F86C /* LyricsWrappedView.swift */; };
 		033EA1822CFF0AA30017F86C /* LyricsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 033EA1812CFF0AA30017F86C /* LyricsWindowController.swift */; };
 		03B04DD32D113D3300507C6F /* Track+Lyrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B04DD22D113D3300507C6F /* Track+Lyrics.swift */; };
+		03DC8D272D17B751001C1288 /* LyricsXCore in Frameworks */ = {isa = PBXBuildFile; productRef = 03DC8D262D17B751001C1288 /* LyricsXCore */; };
 		3E0217D62C23490E00865AC2 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B62C23490E00865AC2 /* FileWatcher.swift */; };
 		3E0217D72C23490E00865AC2 /* FileWatcher+Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B72C23490E00865AC2 /* FileWatcher+Action.swift */; };
 		3E0217D82C23490E00865AC2 /* FileWatcherEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E0215B82C23490E00865AC2 /* FileWatcherEvent.swift */; };
@@ -2165,6 +2166,7 @@
 				3EF30D0D28DC6FE900CB09EA /* DequeModule in Frameworks */,
 				3E86B5102C234B440097746A /* libswresample.xcframework in Frameworks */,
 				030E0F662D0566920040D030 /* LyricsXCore in Frameworks */,
+				03DC8D272D17B751001C1288 /* LyricsXCore in Frameworks */,
 				3EE882842C72A18300E270B8 /* libebur128.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5552,6 +5554,7 @@
 				3EF30D0C28DC6FE900CB09EA /* DequeModule */,
 				3EF30D0E28DC6FE900CB09EA /* OrderedCollections */,
 				030E0F652D0566920040D030 /* LyricsXCore */,
+				03DC8D262D17B751001C1288 /* LyricsXCore */,
 			);
 			productName = Aural;
 			productReference = 3E6C0EBF25CEB3ED00BF0D07 /* Aural.app */;
@@ -5584,7 +5587,7 @@
 			mainGroup = 3E6C0EB625CEB3ED00BF0D07;
 			packageReferences = (
 				3EF30D0928DC6FE900CB09EA /* XCRemoteSwiftPackageReference "swift-collections" */,
-				030E0F642D0566920040D030 /* XCLocalSwiftPackageReference "../LyricsXCore" */,
+				03DC8D252D17B751001C1288 /* XCRemoteSwiftPackageReference "LyricsXCore" */,
 			);
 			productRefGroup = 3E6C0EC025CEB3ED00BF0D07 /* Products */;
 			projectDirPath = "";
@@ -6833,14 +6836,15 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		030E0F642D0566920040D030 /* XCLocalSwiftPackageReference "../LyricsXCore" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../LyricsXCore;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
+		03DC8D252D17B751001C1288 /* XCRemoteSwiftPackageReference "LyricsXCore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tisfeng/LyricsXCore.git";
+			requirement = {
+				branch = dev;
+				kind = branch;
+			};
+		};
 		3EF30D0928DC6FE900CB09EA /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -6854,6 +6858,11 @@
 /* Begin XCSwiftPackageProductDependency section */
 		030E0F652D0566920040D030 /* LyricsXCore */ = {
 			isa = XCSwiftPackageProductDependency;
+			productName = LyricsXCore;
+		};
+		03DC8D262D17B751001C1288 /* LyricsXCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 03DC8D252D17B751001C1288 /* XCRemoteSwiftPackageReference "LyricsXCore" */;
 			productName = LyricsXCore;
 		};
 		3EF30D0A28DC6FE900CB09EA /* Collections */ = {

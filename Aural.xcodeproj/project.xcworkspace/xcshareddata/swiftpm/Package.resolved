@@ -1,5 +1,5 @@
 {
-  "originHash" : "2489b6df6f77af2e0689a883d34dbaec48e370e056d67524b6051efefa9f8bad",
+  "originHash" : "404fa9c1fe51301b1cbb01563640b2de955d566b4dba6ccb44a26373e2013090",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -52,6 +52,15 @@
       "location" : "https://github.com/tisfeng/LyricsKit",
       "state" : {
         "revision" : "6b131e8aa91ca7fb21d8d5b37528b1be36c38b2c"
+      }
+    },
+    {
+      "identity" : "lyricsxcore",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tisfeng/LyricsXCore.git",
+      "state" : {
+        "branch" : "dev",
+        "revision" : "1c5a10c9b8a4525d575944c75d027fd968aa2ff2"
       }
     },
     {
