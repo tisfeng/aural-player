@@ -9,6 +9,7 @@ import Cocoa
 import LyricsCore
 import MusicPlayer
 import SwiftUI
+import LyricsUI
 
 /// Controller for the Lyrics window, host LyricsScrollView
 class LyricsWindowController: NSWindowController {
@@ -74,6 +75,10 @@ class LyricsWindowController: NSWindowController {
         updateLyricsView()
     }
 
+    deinit {
+        messenger.unsubscribeFromAll()
+    }
+
     // MARK: - View Management
 
     private func updateLyricsView() {
@@ -87,10 +92,7 @@ class LyricsWindowController: NSWindowController {
                 self?.messenger.publish(.Player.jumpToTime, payload: position)
             },
             onLyricsUpdate: { [weak self] lyrics in
-                if let fileName = self?.track?.fileName {
-                    lyrics.persistToFile(fileName)
-                }
-                self?.updateTrackInfo()
+                self?.saveLyrics(lyrics)
             }
         )
 
@@ -145,10 +147,44 @@ class LyricsWindowController: NSWindowController {
         isPlaying = playbackDelegate.state == .playing
     }
 
+    /// Auto search lyrics if lyrics is nil
+    private func autoSearchLyrics() {
+
+        guard let track, lyrics == nil else {
+            return
+        }
+
+        let searchService = LyricsSearchService(track: track.musicTrack)
+
+        Task {
+            do {
+                let lyrics = try await searchService.searchLyrics()
+                if let bestLyrics = searchService.pickBestLyrics(from: lyrics) {
+                    self.saveLyrics(bestLyrics)
+                }
+            } catch {
+                print("Search lyrics failed: \(error)")
+            }
+        }
+    }
+
+    /// Save lyrics to file, and update track info
+    private func saveLyrics(_ lyrics: Lyrics) {
+        guard let fileName = track?.fileName else {
+            return
+        }
+
+        lyrics.persistToFile(fileName)
+
+        updateTrackInfo()
+    }
+
     // MARK: - Notification Handlers
 
     private func trackTransitioned(_ notif: TrackTransitionNotification) {
         updateTrackInfo()
+
+        autoSearchLyrics()
     }
 
     private func trackInfoUpdated(_ notif: TrackInfoUpdatedNotification) {
@@ -161,10 +197,6 @@ class LyricsWindowController: NSWindowController {
 
     private func seekPerformed() {
         updateTrackInfo()
-    }
-
-    deinit {
-        messenger.unsubscribeFromAll()
     }
 }
 
