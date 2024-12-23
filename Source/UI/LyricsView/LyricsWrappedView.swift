@@ -1,5 +1,5 @@
 //
-//  LyricsScrollView.swift
+//  LyricsWrappedView.swift
 //  Aural
 //
 //  Created by tisfeng on 2024/12/2.
@@ -22,7 +22,7 @@ struct LyricsWrappedView: View {
     let onLyricsTap: ((Int, ScrollViewProxy) -> Void)?
     let onLyricsUpdate: ((Lyrics) -> Void)?
 
-    public var viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>?
+    public var viewStore: ViewStore<LyricsXCoreState, LyricsXCoreAction>
 
     @State private var isAutoScrollEnabled = true
 
@@ -40,38 +40,28 @@ struct LyricsWrappedView: View {
         self.isPlaying = isPlaying
         self.onLyricsTap = onLyricsTap
         self.onLyricsUpdate = onLyricsUpdate
-        self.viewStore = nil
-
-        if let track, let lyrics {
-            self.viewStore = createViewStore(
-                track: track,
-                lyrics: lyrics,
-                elapsedTime: elapsedTime,
-                isPlaying: isPlaying
-            )
-        }
+        self.viewStore = createViewStore(
+            track: track,
+            lyrics: lyrics,
+            elapsedTime: elapsedTime,
+            isPlaying: isPlaying
+        )
     }
 
     var body: some View {
         if #available(macOS 13.0, *) {
-            Group {
-                if let viewStore {
-                    LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
-                        let position = self.lyrics?[index].position ?? 0
-                        seekTo(position: position, isPlaying: isPlaying)
+            LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
+                let position = self.lyrics?[index].position ?? 0
+                seekTo(position: position, isPlaying: isPlaying)
 
-                        withAnimation(.easeInOut) {
-                            proxy.scrollTo(index, anchor: .center)
-                        }
-
-                        onLyricsTap?(index, proxy)
-                    }
-                    .environmentObject(viewStore)
-                    .padding()
-                } else {
-                    Text("No lyrics available")
+                withAnimation(.easeInOut) {
+                    proxy.scrollTo(index, anchor: .center)
                 }
+
+                onLyricsTap?(index, proxy)
             }
+            .environmentObject(viewStore)
+            .padding()
             .frame(minWidth: 300, minHeight: 80)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contextMenu {
@@ -83,6 +73,8 @@ struct LyricsWrappedView: View {
             }
         } else {
             Text("Lyrics only available on macOS 13.0 or later")
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .foregroundColor(.secondary)
         }
     }
 
@@ -90,7 +82,7 @@ struct LyricsWrappedView: View {
     public func seekTo(position: TimeInterval, isPlaying: Bool) {
         let playbackState = createPlaybackState(elapsedTime: position, isPlaying: isPlaying)
         let progressingAction = LyricsProgressingAction.playbackStateUpdated(playbackState)
-        viewStore?.send(.progressingAction(progressingAction))
+        viewStore.send(.progressingAction(progressingAction))
     }
 
     /// Show search lyrics window

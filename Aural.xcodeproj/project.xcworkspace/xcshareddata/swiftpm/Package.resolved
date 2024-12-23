@@ -1,5 +1,5 @@
 {
-  "originHash" : "404fa9c1fe51301b1cbb01563640b2de955d566b4dba6ccb44a26373e2013090",
+  "originHash" : "808ffe926cc202169833269643c31511c337dfb9e77dcf2fbdba598ae83d62ec",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -60,7 +60,7 @@
       "location" : "https://github.com/tisfeng/LyricsXCore.git",
       "state" : {
         "branch" : "dev",
-        "revision" : "1c5a10c9b8a4525d575944c75d027fd968aa2ff2"
+        "revision" : "e1e14754c790112476566474b92a82d062b4f2cb"
       }
     },
     {
