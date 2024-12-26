@@ -6,10 +6,10 @@
 //
 
 import Cocoa
-import LyricsCore
 import MusicPlayer
 import SwiftUI
 import LyricsUI
+import LyricsService
 
 /// Controller for the Lyrics window, host LyricsScrollView
 class LyricsWindowController: NSWindowController {
@@ -134,7 +134,7 @@ class LyricsWindowController: NSWindowController {
 
     private func updateTrackInfo() {
         track = playbackDelegate.playingTrack
-        lyrics = track?.fetchLyrics()
+        lyrics = track?.fetchLocalLyrics()
         updatePlaybackState()
 
         DispatchQueue.main.async {
@@ -154,12 +154,13 @@ class LyricsWindowController: NSWindowController {
             return
         }
 
-        let searchService = LyricsSearchService(track: track.musicTrack)
+        let searchService = LyricsSearchService()
 
         Task {
             do {
-                let lyrics = try await searchService.searchLyrics()
-                if let bestLyrics = searchService.pickBestLyrics(from: lyrics) {
+                let musicTrack = track.musicTrack
+                let lyricsList = try await searchService.searchLyrics(keyword: musicTrack.searchText)
+                if let bestLyrics = lyricsList.pickBestLyrics(track: musicTrack) {
                     self.saveLyrics(bestLyrics)
                 }
             } catch {

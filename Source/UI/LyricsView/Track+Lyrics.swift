@@ -40,13 +40,13 @@ extension Track {
         fileSystemInfo.fileName
     }
 
-    /// Fetches lyrics for this track from multiple sources in the following order:
+    /// Fetches local lyrics for this track from multiple sources in the following order:
     /// 1. Lyrics directory
     /// 2. Audio file directory
     /// 3. Embedded lyrics in the audio file
     ///
     /// - Returns: A Lyrics object if found, nil otherwise
-    func fetchLyrics() -> Lyrics? {
+    func fetchLocalLyrics() -> Lyrics? {
 
         // 1. First try to find lyrics from Aural lyrics directory
         if let lyrics = loadLyricsFromDirectory(FilesAndPaths.lyricsDir) {

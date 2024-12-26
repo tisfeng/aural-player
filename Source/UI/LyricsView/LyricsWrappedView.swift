@@ -7,11 +7,11 @@
 //
 
 import ComposableArchitecture
-import LyricsCore
 import LyricsUI
 import LyricsXCore
 import MusicPlayer
 import SwiftUI
+import LyricsService
 
 struct LyricsWrappedView: View {
 
@@ -98,7 +98,7 @@ struct LyricsWrappedView: View {
         window.center()
 
         if #available(macOS 12.0, *) {
-            let contentView = LyricsSearchView(track: track) { lyrics in
+            let contentView = LyricsSearchView(searchText: track?.searchText ?? "") { lyrics in
                 self.onLyricsUpdate?(lyrics)
                 windowController.close()
             }
