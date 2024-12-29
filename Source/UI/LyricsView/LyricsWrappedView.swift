@@ -50,7 +50,10 @@ struct LyricsWrappedView: View {
 
     var body: some View {
         if #available(macOS 13.0, *) {
-            LyricsView(isAutoScrollEnabled: $isAutoScrollEnabled) { index, proxy in
+            LyricsView(
+                isAutoScrollEnabled: $isAutoScrollEnabled,
+                showTranslation: true
+            ) { index, proxy in
                 let position = self.lyrics?[index].position ?? 0
                 seekTo(position: position, isPlaying: isPlaying)
 
@@ -97,8 +100,10 @@ struct LyricsWrappedView: View {
         window.title = "Search Lyrics"
         window.center()
 
+        let searchState = SearchState(searchText: track?.searchQuery ?? "")
+
         if #available(macOS 12.0, *) {
-            let contentView = LyricsSearchView(searchText: track?.searchText ?? "") { lyrics in
+            let contentView = LyricsSearchView(searchState: searchState) { lyrics in
                 self.onLyricsUpdate?(lyrics)
                 windowController.close()
             }

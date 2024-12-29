@@ -52,7 +52,7 @@
       "location" : "https://github.com/tisfeng/LyricsKit",
       "state" : {
         "branch" : "dev",
-        "revision" : "61dde5426f4c1fc72c23244a54775a3748a15841"
+        "revision" : "b7c96820cd85684cdafae2b391a4b8abec936012"
       }
     },
     {
@@ -61,7 +61,7 @@
       "location" : "https://github.com/tisfeng/LyricsXCore.git",
       "state" : {
         "branch" : "dev",
-        "revision" : "8ca259f410940d7014ff88802761a5a679259a9f"
+        "revision" : "8825d236413463775fa9c0989133dc684003f09a"
       }
     },
     {

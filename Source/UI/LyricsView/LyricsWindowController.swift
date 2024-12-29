@@ -159,8 +159,8 @@ class LyricsWindowController: NSWindowController {
         Task {
             do {
                 let musicTrack = track.musicTrack
-                let lyricsList = try await searchService.searchLyrics(keyword: musicTrack.searchText)
-                if let bestLyrics = lyricsList.pickBestLyrics(track: musicTrack) {
+                let lyricsList = try await searchService.searchLyrics(keyword: musicTrack.searchQuery)
+                if let bestLyrics = lyricsList.bestMatch(for: musicTrack) {
                     self.saveLyrics(bestLyrics)
                 }
             } catch {
