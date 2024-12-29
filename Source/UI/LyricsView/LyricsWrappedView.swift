@@ -52,7 +52,7 @@ struct LyricsWrappedView: View {
         if #available(macOS 13.0, *) {
             LyricsView(
                 isAutoScrollEnabled: $isAutoScrollEnabled,
-                showTranslation: true
+                showTranslation: preferences.playbackPreferences.showChineseLyricsTranslation.value
             ) { index, proxy in
                 let position = self.lyrics?[index].position ?? 0
                 seekTo(position: position, isPlaying: isPlaying)
