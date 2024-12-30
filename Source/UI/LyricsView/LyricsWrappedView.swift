@@ -100,10 +100,10 @@ struct LyricsWrappedView: View {
         window.title = "Search Lyrics"
         window.center()
 
-        let searchState = SearchState(searchText: track?.searchQuery ?? "")
+        let searchService = LyricsSearchService(searchText: track?.searchQuery ?? "")
 
         if #available(macOS 12.0, *) {
-            let contentView = LyricsSearchView(searchState: searchState) { lyrics in
+            let contentView = LyricsSearchView(searchService: searchService) { lyrics in
                 self.onLyricsUpdate?(lyrics)
                 windowController.close()
             }
